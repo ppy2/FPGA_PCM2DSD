@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------
 * DSM_MAXIMIZER.v
 *
-* Bit Extender of a Delta-Sigma Modulator (Behave like an ADC)
+* Bit Extender of a Delta-Sigma Modulator (Behave like an )
 * 
 * Designer: AUDIY
 * Date    : 22/01/15 (YY/MM/DD)
