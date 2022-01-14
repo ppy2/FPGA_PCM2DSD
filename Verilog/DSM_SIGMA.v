@@ -5,10 +5,11 @@
 *
 * Designer: AUDIY
 * Date    : 22/01/13 (YY/MM/DD)
-* Version : 1.00
+* Version : 1.01
 *
 * Description
 *	Input
+*	BCLK_I: Bit Clock
 *	DATA_I: DATA from DSM_DELTA module
 *
 *	Output
@@ -19,6 +20,7 @@
 -----------------------------------------------------------------------------*/
 
 module DSM_SIGMA(
+	BCLK_I,
 	DATA_I,
 	DATA_O
 );
@@ -27,13 +29,25 @@ module DSM_SIGMA(
 	parameter PCM_Bit_Length = 32;
 	
 	/* Input Definition */
+	input  wire                             BCLK_I;
 	input  wire signed [PCM_Bit_Length:0]   DATA_I;
 	
 	/* Output Definition */
 	output wire signed [PCM_Bit_Length+1:0] DATA_O;
 	
-	/* Integration */
-	assign DATA_O = (DATA_O >>> 1) + DATA_I;
+	/* Internal Register Definition */
+	reg signed [PCM_Bit_Length:0] DATA_Latch_pos = 0;
+	reg signed [PCM_Bit_Length:0] DATA_Latch_neg = 0;
 	
+	/* RTL */
+	always @ (posedge BCLK_I) begin
+		DATA_Latch_pos <= DATA_O[PCM_Bit_Length+1:1];
+	end
+	
+	always @ (negedge BCLK_I) begin
+		DATA_Latch_neg <= DATA_Latch_pos;
+	end
+	
+	assign DATA_O = DATA_Latch_neg + DATA_I;
 	
 endmodule
